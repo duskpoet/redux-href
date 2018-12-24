@@ -1,0 +1,16 @@
+{
+  "name": "redux-href",
+  "version": "0.0.1",
+  "description": "Sync browser href with redux store",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "redux",
+    "router",
+    "location"
+  ],
+  "author": "Eduard Dyckman",
+  "license": "MIT"
+}
