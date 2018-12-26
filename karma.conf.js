@@ -2,6 +2,7 @@
 // Generated on Mon Dec 24 2018 20:20:13 GMT+0300 (GMT+03:00)
 
 process.env.CHROME_BIN = require('puppeteer').executablePath();
+const isCI = process.env.CI;
 
 module.exports = function(config) {
   config.set({
@@ -55,7 +56,7 @@ module.exports = function(config) {
 
     // Continuous Integration mode
     // if true, Karma captures browsers, runs the tests and exits
-    singleRun: false,
+    singleRun: Boolean(isCI),
 
     // Concurrency level
     // how many browser should be started simultaneous
