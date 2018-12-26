@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "outDir": "dist",
+    "module": "esnext",
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "baseUrl": ".",
+    "noErrorTruncation": true,
+    "noUnusedLocals": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true
+  },
+  "exclude": ["node_modules"]
+}

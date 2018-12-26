@@ -4,7 +4,7 @@
   "description": "Sync browser href with redux store",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "karma start"
   },
   "keywords": [
     "redux",
@@ -12,5 +12,15 @@
     "location"
   ],
   "author": "Eduard Dyckman",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "@types/jasmine": "^3.3.5",
+    "karma": "^3.1.4",
+    "karma-chrome-launcher": "^2.2.0",
+    "puppeteer": "1.11.0",
+    "karma-jasmine": "^2.0.1",
+    "karma-typescript": "^3.0.13",
+    "redux": "^4.0.1",
+    "typescript": "^3.2.2"
+  }
 }
