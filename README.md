@@ -38,7 +38,10 @@ const store = createStore(reducer, {}, rehrefEnhancer);
 
 ## API
 
-### rehref(locationToState: LocationToState, stateToLocation: StateToLocation) => StoreEnhancer
+### rehref (
+  locationToState: LocationToState,
+  stateToLocation: StateToLocation
+) => StoreEnhancer
 
 `type LocationToState<S> = (href: URL, state: S) => S`
 Function that takes current href as [URL](https://developer.mozilla.org/en-US/docs/Web/API/URL/URL) object, current state and returns actual state. It will be called on every popstate event.
