@@ -2,19 +2,24 @@ import {
   AnyAction,
   Reducer,
   DeepPartial,
-  StoreEnhancerStoreCreator,
-} from 'redux';
+  StoreEnhancerStoreCreator
+} from "redux";
 
-import locationReducer from './reducer';
-import { LocationToState, StateToLocation } from './typings';
-import { replaceUrl } from './actions';
+import locationReducer from "./reducer";
+import { LocationToState, StateToLocation, LocationParams } from "./typings";
+import { replaceUrl } from "./actions";
 
 const factory = <S>(
   locationToState: LocationToState<S>,
   stateToLocation: StateToLocation<S>
 ) => {
+  let currentUrlData: LocationParams = {};
   const updateLocation = (state: S, replaceHistory: boolean) => {
     const urlData = stateToLocation(state);
+    if (urlData === currentUrlData) {
+      return;
+    }
+    currentUrlData = urlData;
     const currentUrl = new URL(window.location.href);
     const { params = {}, path } = urlData;
     for (let key in params) {
@@ -24,9 +29,9 @@ const factory = <S>(
       currentUrl.pathname = path;
     }
     if (replaceHistory) {
-      window.history.replaceState(state, '', currentUrl.href);
+      window.history.replaceState(state, "", currentUrl.href);
     } else {
-      window.history.pushState(state, '', currentUrl.href);
+      window.history.pushState(state, "", currentUrl.href);
     }
   };
 
@@ -49,13 +54,13 @@ const factory = <S>(
         updateLocation(store.getState(), meta.replaceHistory);
       };
 
-      window.addEventListener('popstate', () => {
+      window.addEventListener("popstate", () => {
         store.dispatch(replaceUrl(window.location.href));
       });
 
       return {
         ...store,
-        dispatch,
+        dispatch
       };
     }) as StoreEnhancerStoreCreator;
 };

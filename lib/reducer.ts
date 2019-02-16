@@ -1,7 +1,7 @@
-import { AnyAction } from 'redux';
+import { AnyAction } from "redux";
 
-import { LocationToState, StateToLocation } from './typings';
-import { Types } from './actions';
+import { LocationToState, StateToLocation } from "./typings";
+import { Types } from "./actions";
 
 const reducer = <S>(
   locationToState: LocationToState<S>,
