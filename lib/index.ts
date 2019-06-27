@@ -2,17 +2,17 @@ import {
   AnyAction,
   Reducer,
   DeepPartial,
-  StoreEnhancerStoreCreator
-} from "redux";
+  StoreEnhancerStoreCreator,
+} from 'redux';
 
-import locationReducer from "./reducer";
-import { LocationToState, StateToLocation, LocationParams } from "./typings";
-import { replaceUrl } from "./actions";
+import locationReducer from './reducer';
+import { LocationParams, RehrefParams } from './typings';
+import { replaceUrl } from './actions';
 
-const factory = <S>(
-  locationToState: LocationToState<S>,
-  stateToLocation: StateToLocation<S>
-) => {
+export const factory = <S>({
+  locationToState,
+  stateToLocation,
+}: RehrefParams<S>) => {
   let currentUrlData: LocationParams = {};
   const updateLocation = (state: S, replaceHistory: boolean) => {
     const urlData = stateToLocation(state);
@@ -29,9 +29,9 @@ const factory = <S>(
       currentUrl.pathname = path;
     }
     if (replaceHistory) {
-      window.history.replaceState(state, "", currentUrl.href);
+      window.history.replaceState(state, '', currentUrl.href);
     } else {
-      window.history.pushState(state, "", currentUrl.href);
+      window.history.pushState(state, '', currentUrl.href);
     }
   };
 
@@ -39,10 +39,7 @@ const factory = <S>(
     ((reducer: Reducer<S, AnyAction>, preloadedState?: DeepPartial<S>) => {
       const store = createStore(
         (state: S, action: AnyAction) =>
-          locationReducer(locationToState, stateToLocation)(
-            reducer(state, action),
-            action
-          ),
+          locationReducer(locationToState)(reducer(state, action), action),
         preloadedState
       );
 
@@ -54,15 +51,13 @@ const factory = <S>(
         updateLocation(store.getState(), meta.replaceHistory);
       };
 
-      window.addEventListener("popstate", () => {
+      window.addEventListener('popstate', () => {
         store.dispatch(replaceUrl(window.location.href));
       });
 
       return {
         ...store,
-        dispatch
+        dispatch,
       };
     }) as StoreEnhancerStoreCreator;
 };
-
-export default factory;

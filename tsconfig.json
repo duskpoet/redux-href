@@ -3,6 +3,7 @@
     "outDir": "dist",
     "module": "esnext",
     "moduleResolution": "node",
+    "declaration": true,
     "sourceMap": true,
     "baseUrl": ".",
     "noErrorTruncation": true,

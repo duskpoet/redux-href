@@ -2,9 +2,10 @@
   "name": "redux-href",
   "version": "0.1.0",
   "description": "Sync browser href with redux store",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
-    "test": "karma start"
+    "test": "karma start",
+    "build": "rm -rf ./dist/* && tsc -p ."
   },
   "keywords": [
     "redux",
