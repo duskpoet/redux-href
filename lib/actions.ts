@@ -1,10 +1,11 @@
+import { Location } from 'history';
 export const Types = {
-  replaceUrl: "@@re-href/replace-url"
+  replaceUrl: '@@re-href/replace-url',
 };
 
-export const replaceUrl = (href: string) => ({
+export const replaceUrl = (location: Location) => ({
   type: Types.replaceUrl,
   payload: {
-    href
-  }
+    location,
+  },
 });

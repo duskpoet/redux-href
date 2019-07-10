@@ -16,6 +16,8 @@
   "license": "MIT",
   "devDependencies": {
     "@types/jasmine": "^3.3.5",
+    "@types/history": "4.6.2",
+    "history": "4.9.0",
     "karma": "^4.1.0",
     "karma-chrome-launcher": "^2.2.0",
     "karma-jasmine": "^2.0.1",
@@ -23,5 +25,8 @@
     "puppeteer": "^1.18.1",
     "redux": "^4.0.1",
     "typescript": "^3.2.2"
+  },
+  "peerDependencies": {
+    "history": "^4.9.0"
   }
 }

@@ -10,20 +10,24 @@ var __assign = (this && this.__assign) || function () {
     return __assign.apply(this, arguments);
 };
 import { createStore } from 'redux';
+import { createMemoryHistory } from 'history';
 import { factory } from '.';
 var initialState = {
     name: '',
     userId: '',
     page: 0
 };
-var enhancerSimple = factory({
-    locationToState: function (url, state) { return (__assign({}, state, { page: Number(url.searchParams.get('page')) })); },
-    stateToLocation: function (state) { return ({
-        params: {
-            page: String(state.page)
-        }
-    }); }
-});
+var enhancerSimple = function (history) {
+    return factory({
+        history: history,
+        locationToState: function (url, state) { return (__assign({}, state, { page: Number(url.searchParams.get('page')) })); },
+        stateToLocation: function (state) { return ({
+            params: {
+                page: String(state.page)
+            }
+        }); }
+    });
+};
 var SET_PAGE = 'SET_PAGE';
 var reducer = function (state, action) {
     if (state === void 0) { state = initialState; }
@@ -35,31 +39,25 @@ var reducer = function (state, action) {
     }
 };
 describe('re-href', function () {
-    beforeEach(function () {
-        window.history.replaceState({}, '', '/');
-        Object.defineProperty(window.history, 'pushState', {
-            writable: true,
-            value: jasmine.createSpy('pushState')
-        });
-    });
     it('works with no specific info in location', function () {
-        var store = createStore(reducer, {}, enhancerSimple);
+        var history = createMemoryHistory();
+        var store = createStore(reducer, {}, enhancerSimple(history));
         var state = store.getState();
         expect(state.page).toEqual(0);
     });
     it('works with set up location', function () {
-        window.history.replaceState({}, '', '/?page=2');
-        var store = createStore(reducer, {}, enhancerSimple);
+        var history = createMemoryHistory();
+        history.replace('/?page=2');
+        var store = createStore(reducer, {}, enhancerSimple(history));
         var state = store.getState();
         expect(state.page).toEqual(2);
     });
     it('propagates changes to location', function () {
-        var store = createStore(reducer, {}, enhancerSimple);
-        var prevHref = window.location.href;
+        var history = createMemoryHistory();
+        var store = createStore(reducer, {}, enhancerSimple(history));
         store.dispatch({ type: SET_PAGE, payload: 5 });
-        expect(window.history.pushState).toHaveBeenCalled();
-        window.history.replaceState({}, '', prevHref);
-        window.dispatchEvent(new Event('popstate'));
+        expect(history.location.search).toBe('?page=5');
+        history.goBack();
         expect(store.getState().page).toEqual(0);
     });
 });

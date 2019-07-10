@@ -5,33 +5,40 @@ import {
   StoreEnhancerStoreCreator,
 } from 'redux';
 
-import locationReducer from './reducer';
-import { LocationParams, RehrefParams } from './typings';
-import { replaceUrl } from './actions';
+import { LocationParams, RehrefParams, LocationToState } from './typings';
+import { replaceUrl, Types } from './actions';
+import { paramsToLocation, locationToParams } from './util';
 
 export const factory = <S>({
   locationToState,
   stateToLocation,
+  history,
 }: RehrefParams<S>) => {
   let currentUrlData: LocationParams = {};
-  const updateLocation = (state: S, replaceHistory: boolean) => {
+  const updateLocation = (state: S, pushHistory: boolean) => {
     const urlData = stateToLocation(state);
     if (urlData === currentUrlData) {
       return;
     }
     currentUrlData = urlData;
-    const currentUrl = new URL(window.location.href);
-    const { params = {}, path } = urlData;
-    for (let key in params) {
-      currentUrl.searchParams.set(key, params[key]);
-    }
-    if (path !== undefined) {
-      currentUrl.pathname = path;
-    }
-    if (replaceHistory) {
-      window.history.replaceState(state, '', currentUrl.href);
+    if (pushHistory) {
+      history.push(paramsToLocation(urlData, state));
     } else {
-      window.history.pushState(state, '', currentUrl.href);
+      history.replace(paramsToLocation(urlData, state));
+    }
+  };
+
+  const locationReducer = <S>(locationToState: LocationToState<S>) => (
+    state: S,
+    action: AnyAction
+  ) => {
+    switch (action.type) {
+      case Types.replaceUrl: {
+        const { location } = action.payload;
+        return locationToState(locationToParams(location), state);
+      }
+      default:
+        return state;
     }
   };
 
@@ -42,17 +49,16 @@ export const factory = <S>({
           locationReducer(locationToState)(reducer(state, action), action),
         preloadedState
       );
-
-      store.dispatch(replaceUrl(window.location.href));
+      store.dispatch(replaceUrl(history.location));
 
       const dispatch = (action: AnyAction) => {
         store.dispatch(action);
         const { meta = {} } = action;
-        updateLocation(store.getState(), meta.replaceHistory);
+        updateLocation(store.getState(), meta.pushHistory);
       };
 
-      window.addEventListener('popstate', () => {
-        store.dispatch(replaceUrl(window.location.href));
+      history.listen(location => {
+        store.dispatch(replaceUrl(location));
       });
 
       return {
