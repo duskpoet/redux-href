@@ -1,10 +1,10 @@
 export var Types = {
-    replaceUrl: "@@re-href/replace-url"
+    replaceUrl: '@@re-href/replace-url'
 };
-export var replaceUrl = function (href) { return ({
+export var replaceUrl = function (location) { return ({
     type: Types.replaceUrl,
     payload: {
-        href: href
+        location: location
     }
 }); };
 //# sourceMappingURL=actions.js.map

@@ -20,7 +20,11 @@ var initialState = {
 var enhancerSimple = function (history) {
     return factory({
         history: history,
-        locationToState: function (url, state) { return (__assign({}, state, { page: Number(url.searchParams.get('page')) })); },
+        locationToState: function (location, state) {
+            return __assign({}, state, { page: location.params.page != null
+                    ? Number(location.params.page)
+                    : state.page });
+        },
         stateToLocation: function (state) { return ({
             params: {
                 page: String(state.page)
@@ -41,21 +45,22 @@ var reducer = function (state, action) {
 describe('re-href', function () {
     it('works with no specific info in location', function () {
         var history = createMemoryHistory();
-        var store = createStore(reducer, {}, enhancerSimple(history));
+        var store = createStore(reducer, enhancerSimple(history));
         var state = store.getState();
         expect(state.page).toEqual(0);
     });
     it('works with set up location', function () {
         var history = createMemoryHistory();
         history.replace('/?page=2');
-        var store = createStore(reducer, {}, enhancerSimple(history));
+        var store = createStore(reducer, enhancerSimple(history));
         var state = store.getState();
         expect(state.page).toEqual(2);
     });
     it('propagates changes to location', function () {
         var history = createMemoryHistory();
-        var store = createStore(reducer, {}, enhancerSimple(history));
-        store.dispatch({ type: SET_PAGE, payload: 5 });
+        history.push('/?page=0');
+        var store = createStore(reducer, enhancerSimple(history));
+        store.dispatch({ type: SET_PAGE, payload: 5, meta: { pushHistory: true } });
         expect(history.location.search).toBe('?page=5');
         history.goBack();
         expect(store.getState().page).toEqual(0);
