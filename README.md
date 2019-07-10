@@ -2,7 +2,7 @@
 [![Build Status](https://travis-ci.com/duskpoet/redux-href.svg?branch=master)](https://travis-ci.com/duskpoet/redux-href)
 
 ## Simple routing and query params management library written in typescript for redux.
-It also uses `history` for location and history management, so it's compatible nodejs and react-router.
+It also uses `history` for location and history management, so it's compatible with nodejs and react-router.
 
 ```ts
 import { createStore } from 'redux';
@@ -52,8 +52,8 @@ interface LocationParams {
   params?: { [name: string]: string }; // query params in url
 }
 
-/**
-Function that takes current href as [URL](https://developer.mozilla.org/en-US/docs/Web/API/URL/URL) object, current state and returns actual state. It will be called on every popstate event.
+/** 
+ * Function that takes current href as LocationParams object, current state and returns actual state. It will be called on every history changing event.
 */
 `type LocationToState<S> = (location: LocationParams, state: S) => S`
 
