@@ -1,6 +1,6 @@
 {
   "name": "redux-href",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Sync browser href with redux store",
   "main": "dist/index.js",
   "scripts": {
