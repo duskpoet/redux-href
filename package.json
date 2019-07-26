@@ -3,6 +3,7 @@
   "version": "1.0.1",
   "description": "Sync browser href with redux store",
   "main": "dist/index.js",
+  "repository": "github:duskpoet/redux-href",
   "scripts": {
     "test": "karma start",
     "build": "rm -rf ./dist/* && tsc -p ."
@@ -18,13 +19,13 @@
     "@types/jasmine": "^3.3.5",
     "@types/history": "4.6.2",
     "history": "4.9.0",
-    "karma": "^4.1.0",
-    "karma-chrome-launcher": "^2.2.0",
-    "karma-jasmine": "^2.0.1",
-    "karma-typescript": "^4.1.0",
-    "puppeteer": "^1.18.1",
+    "karma": "4.2.0",
+    "karma-chrome-launcher": "3.0.0",
+    "karma-jasmine": "2.0.1",
+    "karma-typescript": "4.1.1",
+    "puppeteer": "1.19.0",
     "redux": "^4.0.1",
-    "typescript": "^3.2.2"
+    "typescript": "3.5.3"
   },
   "peerDependencies": {
     "history": "^4.9.0"
