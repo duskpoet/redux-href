@@ -15,12 +15,14 @@ export const factory = <S>({
   history,
 }: RehrefParams<S>) => {
   let currentUrlData: LocationParams = {};
+  let updateLocationLock = 0;
   const updateLocation = (state: S, pushHistory: boolean) => {
     const urlData = stateToLocation(state);
     if (urlData === currentUrlData) {
       return;
     }
     currentUrlData = urlData;
+    updateLocationLock++;
     if (pushHistory) {
       history.push(paramsToLocation(urlData, state));
     } else {
@@ -58,6 +60,10 @@ export const factory = <S>({
       };
 
       history.listen(location => {
+        if (updateLocationLock) {
+          updateLocationLock--;
+          return;
+        }
         store.dispatch(replaceUrl(location));
       });
 

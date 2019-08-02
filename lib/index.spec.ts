@@ -72,4 +72,13 @@ describe('re-href', () => {
     history.goBack();
     expect(store.getState().page).toEqual(0);
   });
+
+  it('does not dispatch replace url after every action', () => {
+    const history = createMemoryHistory();
+    const store = createStore(reducer, enhancerSimple(history));
+    const spy = jasmine.createSpy('Subscribe');
+    store.subscribe(spy);
+    store.dispatch({ type: 'random_action' });
+    expect(spy).toHaveBeenCalledTimes(1);
+  });
 });

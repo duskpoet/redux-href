@@ -65,5 +65,13 @@ describe('re-href', function () {
         history.goBack();
         expect(store.getState().page).toEqual(0);
     });
+    it('does not dispatch replace url after every action', function () {
+        var history = createMemoryHistory();
+        var store = createStore(reducer, enhancerSimple(history));
+        var spy = jasmine.createSpy('Subscribe');
+        store.subscribe(spy);
+        store.dispatch({ type: 'random_action' });
+        expect(spy).toHaveBeenCalledTimes(1);
+    });
 });
 //# sourceMappingURL=index.spec.js.map

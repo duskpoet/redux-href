@@ -14,12 +14,14 @@ import { paramsToLocation, locationToParams } from './util';
 export var factory = function (_a) {
     var locationToState = _a.locationToState, stateToLocation = _a.stateToLocation, history = _a.history;
     var currentUrlData = {};
+    var updateLocationLock = 0;
     var updateLocation = function (state, pushHistory) {
         var urlData = stateToLocation(state);
         if (urlData === currentUrlData) {
             return;
         }
         currentUrlData = urlData;
+        updateLocationLock++;
         if (pushHistory) {
             history.push(paramsToLocation(urlData, state));
         }
@@ -49,6 +51,10 @@ export var factory = function (_a) {
                 updateLocation(store.getState(), meta.pushHistory);
             };
             history.listen(function (location) {
+                if (updateLocationLock) {
+                    updateLocationLock--;
+                    return;
+                }
                 store.dispatch(replaceUrl(location));
             });
             return __assign({}, store, { dispatch: dispatch });
