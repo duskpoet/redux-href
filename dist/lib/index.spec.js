@@ -11,7 +11,8 @@ var __assign = (this && this.__assign) || function () {
 };
 import { createStore } from 'redux';
 import { createMemoryHistory } from 'history';
-import { factory, dispose } from '.';
+import { factory } from '.';
+import { dispose } from './actions';
 var initialState = {
     name: '',
     userId: '',

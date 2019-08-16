@@ -1,6 +1,7 @@
 import { createStore, AnyAction } from 'redux';
 import { createMemoryHistory, History } from 'history';
-import { factory, dispose } from '.';
+import { factory } from '.';
+import { dispose } from './actions';
 
 interface State {
   name: string;

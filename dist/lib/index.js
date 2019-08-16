@@ -9,7 +9,7 @@ var __assign = (this && this.__assign) || function () {
     };
     return __assign.apply(this, arguments);
 };
-import { replaceUrl, dispose, Types } from './actions';
+import { replaceUrl, Types } from './actions';
 import { paramsToLocation, locationToParams } from './util';
 export var factory = function (_a) {
     var locationToState = _a.locationToState, stateToLocation = _a.stateToLocation, history = _a.history;
@@ -68,5 +68,4 @@ export var factory = function (_a) {
         });
     };
 };
-export { dispose };
 //# sourceMappingURL=index.js.map

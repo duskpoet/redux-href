@@ -6,7 +6,7 @@ import {
 } from 'redux';
 
 import { LocationParams, RehrefParams, LocationToState } from './typings';
-import { replaceUrl, dispose, Types } from './actions';
+import { replaceUrl, Types } from './actions';
 import { paramsToLocation, locationToParams } from './util';
 
 export const factory = <S>({
@@ -80,5 +80,3 @@ export const factory = <S>({
       };
     }) as StoreEnhancerStoreCreator;
 };
-
-export { dispose };
