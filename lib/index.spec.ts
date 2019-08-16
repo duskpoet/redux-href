@@ -1,6 +1,6 @@
 import { createStore, AnyAction } from 'redux';
 import { createMemoryHistory, History } from 'history';
-import { factory } from '.';
+import { factory, dispose } from '.';
 
 interface State {
   name: string;
@@ -80,5 +80,22 @@ describe('re-href', () => {
     store.subscribe(spy);
     store.dispatch({ type: 'random_action' });
     expect(spy).toHaveBeenCalledTimes(1);
+  });
+
+  it("doesn't keep any subscriptions and reactions after dispose action", () => {
+    const history = createMemoryHistory();
+    const store = createStore(reducer, enhancerSimple(history));
+    const spyStore = jasmine.createSpy('Store');
+    const spyHistory = jasmine.createSpy('History');
+
+    store.subscribe(spyStore);
+    history.listen(spyHistory);
+    store.dispatch({ type: 'random_action' });
+    expect(spyStore).toHaveBeenCalledTimes(1);
+    expect(spyHistory).toHaveBeenCalledTimes(1);
+    store.dispatch(dispose());
+    store.dispatch({ type: 'some_action' });
+    expect(spyStore).toHaveBeenCalledTimes(3);
+    expect(spyHistory).toHaveBeenCalledTimes(1);
   });
 });

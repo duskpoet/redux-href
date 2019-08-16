@@ -1,6 +1,7 @@
 import { Location } from 'history';
 export const Types = {
   replaceUrl: '@@re-href/replace-url',
+  dispose: '@@re-href/dispose',
 };
 
 export const replaceUrl = (location: Location) => ({
@@ -8,4 +9,7 @@ export const replaceUrl = (location: Location) => ({
   payload: {
     location,
   },
+});
+export const dispose = () => ({
+  type: Types.dispose,
 });

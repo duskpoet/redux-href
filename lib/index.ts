@@ -6,7 +6,7 @@ import {
 } from 'redux';
 
 import { LocationParams, RehrefParams, LocationToState } from './typings';
-import { replaceUrl, Types } from './actions';
+import { replaceUrl, dispose, Types } from './actions';
 import { paramsToLocation, locationToParams } from './util';
 
 export const factory = <S>({
@@ -16,6 +16,7 @@ export const factory = <S>({
 }: RehrefParams<S>) => {
   let currentUrlData: LocationParams = {};
   let updateLocationLock = 0;
+  let disposed = false;
   const updateLocation = (state: S, pushHistory: boolean) => {
     const urlData = stateToLocation(state);
     if (urlData === currentUrlData) {
@@ -53,13 +54,7 @@ export const factory = <S>({
       );
       store.dispatch(replaceUrl(history.location));
 
-      const dispatch = (action: AnyAction) => {
-        store.dispatch(action);
-        const { meta = {} } = action;
-        updateLocation(store.getState(), meta.pushHistory);
-      };
-
-      history.listen(location => {
+      const unsubscribe = history.listen(location => {
         if (updateLocationLock) {
           updateLocationLock--;
           return;
@@ -67,9 +62,23 @@ export const factory = <S>({
         store.dispatch(replaceUrl(location));
       });
 
+      const dispatch = (action: AnyAction) => {
+        store.dispatch(action);
+        const { meta = {} } = action;
+        if (action.type === Types.dispose) {
+          disposed = true;
+          unsubscribe();
+        }
+        if (!disposed) {
+          updateLocation(store.getState(), meta.pushHistory);
+        }
+      };
+
       return {
         ...store,
         dispatch,
       };
     }) as StoreEnhancerStoreCreator;
 };
+
+export { dispose };

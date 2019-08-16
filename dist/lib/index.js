@@ -9,12 +9,13 @@ var __assign = (this && this.__assign) || function () {
     };
     return __assign.apply(this, arguments);
 };
-import { replaceUrl, Types } from './actions';
+import { replaceUrl, dispose, Types } from './actions';
 import { paramsToLocation, locationToParams } from './util';
 export var factory = function (_a) {
     var locationToState = _a.locationToState, stateToLocation = _a.stateToLocation, history = _a.history;
     var currentUrlData = {};
     var updateLocationLock = 0;
+    var disposed = false;
     var updateLocation = function (state, pushHistory) {
         var urlData = stateToLocation(state);
         if (urlData === currentUrlData) {
@@ -45,20 +46,27 @@ export var factory = function (_a) {
                 return locationReducer(locationToState)(reducer(state, action), action);
             }, preloadedState);
             store.dispatch(replaceUrl(history.location));
-            var dispatch = function (action) {
-                store.dispatch(action);
-                var _a = action.meta, meta = _a === void 0 ? {} : _a;
-                updateLocation(store.getState(), meta.pushHistory);
-            };
-            history.listen(function (location) {
+            var unsubscribe = history.listen(function (location) {
                 if (updateLocationLock) {
                     updateLocationLock--;
                     return;
                 }
                 store.dispatch(replaceUrl(location));
             });
+            var dispatch = function (action) {
+                store.dispatch(action);
+                var _a = action.meta, meta = _a === void 0 ? {} : _a;
+                if (action.type === Types.dispose) {
+                    disposed = true;
+                    unsubscribe();
+                }
+                if (!disposed) {
+                    updateLocation(store.getState(), meta.pushHistory);
+                }
+            };
             return __assign({}, store, { dispatch: dispatch });
         });
     };
 };
+export { dispose };
 //# sourceMappingURL=index.js.map

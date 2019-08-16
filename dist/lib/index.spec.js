@@ -11,7 +11,7 @@ var __assign = (this && this.__assign) || function () {
 };
 import { createStore } from 'redux';
 import { createMemoryHistory } from 'history';
-import { factory } from '.';
+import { factory, dispose } from '.';
 var initialState = {
     name: '',
     userId: '',
@@ -72,6 +72,21 @@ describe('re-href', function () {
         store.subscribe(spy);
         store.dispatch({ type: 'random_action' });
         expect(spy).toHaveBeenCalledTimes(1);
+    });
+    it("doesn't keep any subscriptions and reactions after dispose action", function () {
+        var history = createMemoryHistory();
+        var store = createStore(reducer, enhancerSimple(history));
+        var spyStore = jasmine.createSpy('Store');
+        var spyHistory = jasmine.createSpy('History');
+        store.subscribe(spyStore);
+        history.listen(spyHistory);
+        store.dispatch({ type: 'random_action' });
+        expect(spyStore).toHaveBeenCalledTimes(1);
+        expect(spyHistory).toHaveBeenCalledTimes(1);
+        store.dispatch(dispose());
+        store.dispatch({ type: 'some_action' });
+        expect(spyStore).toHaveBeenCalledTimes(3);
+        expect(spyHistory).toHaveBeenCalledTimes(1);
     });
 });
 //# sourceMappingURL=index.spec.js.map
