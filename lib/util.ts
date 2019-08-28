@@ -1,10 +1,7 @@
 import { LocationParams, SearchParams } from './typings';
 import { LocationDescriptorObject, Location } from 'history';
-export const paramsToLocation = <S>(
-  { params, path }: LocationParams,
-  state: S
-) => {
-  let result: LocationDescriptorObject = { state };
+export const paramsToLocation = ({ params, path }: LocationParams) => {
+  let result: LocationDescriptorObject = {};
   if (path !== undefined) {
     result.pathname = path;
   }
