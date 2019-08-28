@@ -1,6 +1,6 @@
-export var paramsToLocation = function (_a, state) {
+export var paramsToLocation = function (_a) {
     var params = _a.params, path = _a.path;
-    var result = { state: state };
+    var result = {};
     if (path !== undefined) {
         result.pathname = path;
     }

@@ -24,10 +24,10 @@ export var factory = function (_a) {
         currentUrlData = urlData;
         updateLocationLock++;
         if (pushHistory) {
-            history.push(paramsToLocation(urlData, state));
+            history.push(paramsToLocation(urlData));
         }
         else {
-            history.replace(paramsToLocation(urlData, state));
+            history.replace(paramsToLocation(urlData));
         }
     };
     var locationReducer = function (locationToState) { return function (state, action) {
